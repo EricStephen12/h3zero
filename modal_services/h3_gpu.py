@@ -194,7 +194,7 @@ def download_models() -> None:
 
 @app.cls(
     image=comfy_image,
-    gpu="RTX-PRO-6000",
+    gpu="A10G",
     volumes={"/models": model_volume, jobs.OUTPUT_ROOT: output_volume},
     timeout=60 * 60,
     startup_timeout=20 * 60,
