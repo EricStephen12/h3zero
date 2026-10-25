@@ -23,16 +23,20 @@ jobs:
 
       - name: Install Modal & Configure Credentials
         env:
-          MODAL_TOKEN_ID: ${{ secrets.MODAL_TOKEN_ID }}
-          MODAL_TOKEN_SECRET: ${{ secrets.MODAL_TOKEN_SECRET }}
+          RAW_ID: ${{ secrets.MODAL_TOKEN_ID }}
+          RAW_SECRET: ${{ secrets.MODAL_TOKEN_SECRET }}
         run: |
+          CLEAN_ID=$(echo "$RAW_ID" | tr -d '\r\n[:space:]')
+          CLEAN_SECRET=$(echo "$RAW_SECRET" | tr -d '\r\n[:space:]')
           python -m pip install --upgrade pip modal
-          modal token set --token-id "$MODAL_TOKEN_ID" --token-secret "$MODAL_TOKEN_SECRET"
+          modal token set --token-id "$CLEAN_ID" --token-secret "$CLEAN_SECRET"
           npm install
 
       - name: Download Models & Deploy to Modal
         env:
-          MODAL_TOKEN_ID: ${{ secrets.MODAL_TOKEN_ID }}
-          MODAL_TOKEN_SECRET: ${{ secrets.MODAL_TOKEN_SECRET }}
+          RAW_ID: ${{ secrets.MODAL_TOKEN_ID }}
+          RAW_SECRET: ${{ secrets.MODAL_TOKEN_SECRET }}
         run: |
+          export MODAL_TOKEN_ID=$(echo "$RAW_ID" | tr -d '\r\n[:space:]')
+          export MODAL_TOKEN_SECRET=$(echo "$RAW_SECRET" | tr -d '\r\n[:space:]')
           npm run setup
